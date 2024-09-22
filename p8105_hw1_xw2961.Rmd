@@ -1,28 +1,67 @@
 ---
 title: "p8105_hw1_xw2961"
 output: github_document
+date: "2024-09-21"
 ---
 
-```{r}
+```{r chunk1}
 library(tidyverse)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+# Load the dataset
+```{r chunk2}
+data("penguins", package = "palmerpenguins")
 ```
 
-## Including Plots
+# QUESTION 1: data description
+```{r}
+?penguins
 
-You can also embed plots, for example:
+nrow(penguins)
+ncol(penguins)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+mean(penguins$flipper_length_mm, na.rm=TRUE)
+
+ggplot(data=penguins,aes(x = bill_length_mm, y = flipper_length_mm)) + geom_point(aes(color = species), na.rm=TRUE)
+```
+- The dataset penguins consists of 8 variables: species, island, bill_length_mm,bill_depth_mm, flipper_length_mm,body_mass_g,sex,year 
+- `species`: The species of penguin.
+- `island`: the island in which the kind of species live in 
+- `bill_length_mm`: Length of the penguin's bill in millimeters.
+- `bill_depth_mm`: Depth of the penguin's bill in millimeters.
+- `flipper_length_mm`: Length of the penguin's flipper in millimeters.
+- `body_mass_g`: Body mass of the penguin in grams.
+- `sex`: The sex of the penguin (male or female).
+
+- Number of rows: 344
+- Number of column: 8
+
+- Mean flipper length=200.92
+
+#QUESTION 2: Creating a data frame
+```{r}
+Data_Frame <- data.frame(
+              samp =rnorm(10),
+              Character_vector = c("Lusa", "is", "good", "perfect", "beautiful", "charming", "hard working","good at R", "nice","very nice"),
+              Factor_vector = factor(rep(c("low", "medium", "high"), length.out = 10)))
+Data_Frame$Logical_vector = Data_Frame$samp > 0
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+mean(Data_Frame[["samp"]])
+mean(Data_Frame[["Logical_vector"]])
+mean(Data_Frame[["Character_vector"]])
+mean(Data_Frame[["Factor_vector"]])
+```
+The dataset with numerical value can have the mean, and the dataset with categorical value cannot output the mean.
+
+```{r}
+# Convert the logical, character, and factor variables to numeric
+logical_as_numeric <- as.numeric(Data_Frame$Logical_vector)   
+character_as_numeric <- as.numeric(Data_Frame$Character_vector)  
+factor_as_numeric <- as.numeric(Data_Frame$Factor_vector)
+```
+Logical to Numeric: Works and provides the proportion of TRUE values because TRUE is treated as 1 and FALSE as 0.
+Character to Numeric: Does not work and produces NAs, because characters cannot be directly converted to numeric.
+Factor to Numeric: Works, but it’s important to note that the result represents the mean of the integer codes associated with the factor levels, which may not be meaningful unless you're aware of the factor's internal ordering.
